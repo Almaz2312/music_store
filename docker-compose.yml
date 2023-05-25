@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    volumes:
+      - ./music_store
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - default
+      - service-proxy
+
+networks:
+  service-proxy:
+
+volumes:
+  postgres_data:
